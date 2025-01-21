@@ -19,3 +19,10 @@ Security Assistant Researcher Analyzer
         <li>
     </ol>
 </details>
+
+<details><summary><h2>Todo</h2></summary>
+    <ol>
+        <li>Update default dirs</li>
+        <li>Update default subdomains</li>
+    </ol>
+</details>
