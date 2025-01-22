@@ -1,5 +1,5 @@
 <h1 align='center'>SARA</h1>
-<h2>Security Assistant Researcher Analyzer V1.0</h2>
+<h2>Security Assistant Researcher Analyzer v1.0</h2>
 
 
 <details><summary><h2>Detailed description</h2></summary>
