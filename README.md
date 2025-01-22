@@ -111,7 +111,7 @@
   <tbody>
     <tr>
       <td align='center'><b>1.0</b></td>
-      <td>
+      <td width=450>
         <ul>
           <li><code>-t</code>, <code>-c</code>: Crawling and analysis</li>
           <li><code>--enum-d</code>, <code>--enum-s</code> (<code>--http</code>): Enumeration modes</li>
