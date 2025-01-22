@@ -2,7 +2,7 @@
 
 ## About SARA
 
-**SARA** *(Security Assistant, Researcher, Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
+**SARA** *(Security Assistant Researcher Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
 <p>The primary goal of the tool is to crawl target addresses, analyze source code and JavaScript files, and search for keywords, comments, and inline scripts. It also supports custom headers for flexibility.</p>
 <p>Also there is an animation indicating that the program is running is included. The message <code>I’m running</code> will add a <code>.</code> every second to show activity.</p>
 
