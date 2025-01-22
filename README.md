@@ -141,7 +141,7 @@ Here is an example of the `--help` command output:
         <li>Add Versions and Release descrition</li>
         <li>Update default dirs</li>
         <li>Update default subdomains</li>
-        <li>Add cheker that checks -wjs, -wha with emum flags and --http inlo with --enum-s</li>
+        <li>Add cheker that checks -wjs, -wha with emum flags and --http only with --enum-s</li>
         <li>Check installation instructions</li>
         <li>Add some wordlists for api for example</li>
     </ol>
