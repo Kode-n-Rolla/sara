@@ -18,14 +18,14 @@
             </ul>
     </ul>
 
-<h3><ins>Ideal for:</ins></h3>
+<h3><ins>Ideal For:</ins></h3>
     <ul>
         <li>Conducting penetration tests.</li>
         <li>Bug bounty programs that require deep automation with minimal detection and noise.</li>
     </ul>
 
 
-<details><summary><h2><ins>Detailed description</ins></h2></summary>
+<details><summary><h2><ins>Detailed Description</ins></h2></summary>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
     <ol>
         <li><code>-t</code></li>
@@ -77,28 +77,68 @@
     </ol>
 </details>
 
-<details><summary><h2><ins>Installation</ins></h2></summary>
+<details><summary><h2><ins>Installation Instructions</ins></h2></summary>
+    <p>Follow these steps to set up and use <b>SARA</b>:</p>
     <ol>
-        <li></li>
+        <li><b>Clone the Repository</b></li>
+            <pre><code>git clone https://github.com/Kode-n-Rolla/sara.git</code></pre>
+        <li><b>Navigate to the Source Directory</b></li>
+            <pre><code>cd sara/src</code></pre>
+        <li><b>Install Dependencies</b></li>
+            <pre><code>pip install -r requirements.txt</code></pre>
+            <p>Alternatively, if you encounter an error like <code>× This environment is externally managed</code>, use:</p>
+            <pre><code>pip install -r requirements.txt --break-system-packages</code></pre>
+        <li><b>Run the Tool</b></li>
+            <p>Execute the script with python3 to see available options:</p>
+            <pre><code>python3 sara.py -h</code></pre>
+        <li><b>Optional: Create a System-wide Command Shortcut</b></li>
+            <p>To make it easier to run SARA, you can create a symbolic link (recommended save in /opt first or any your tools directory):</p>
+            <pre><code>sudo ln -s "$(pwd)/sara.py" /usr/local/bin/sara</code></pre>
+            <p>Now, you can run the tool from anywhere using:</p>
+            <pre><code>sara --help</code></pre>
     </ol>
 </details>
 
 <details><summary><h2><ins>Versions</ins></h2></summary>
-    <ol>
-        <li></li>
-    </ol>
+<table>
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Key Features</th>
+      <th>Release Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align='center'><b>1.0</b></td>
+      <td>
+        <ul>
+          <li><code>-t</code>, <code>-c</code>: Crawling and analysis</li>
+          <li><code>--enum-d</code>, <code>--enum-s</code> (<code>--http</code>): Enumeration modes</li>
+          <li><code>-H</code>, <code>-kw</code>: Custom headers and keywords</li>
+          <li><code>-wha</code>, <code>-wjs</code>: Disable header or JS analysis</li>
+          <li><code>-o</code>: Save results to a file</li>
+          <li><code>--help</code>: Comprehensive manual with examples</li>
+        </ul>
+      </td>
+      <td align='center'>
+        Initial release with core functionality including crawling, enumeration, and customizable features for penetration testing and bug bounty tasks.
+      </td>
+    </tr>
+  </tbody>
+</table>    
 </details>
 
-<h3 align='center'>From pentester and bug hunter to pentesters and bug hunters</h3>
+<h2 align='center'>From Pentester and Bug Hunter to Pentesters and Bug Hunters with love ❤️</h2>
 
 <details><summary><h2>Todo</h2></summary>
     <ol>
-        <li>Add description, images (with folder)</li>
-        <li>Add installation</li>
-        <li>Add Versions</li>
-        <li>Add dist folder with zip file</li>
+        <li>Add images (with folder)</li>
+        <li>Add Versions and Release descrition</li>
         <li>Update default dirs</li>
         <li>Update default subdomains</li>
         <li>Add cheker that checks -wjs, -wha with emum flags and --http inlo with --enum-s</li>
+        <li>Check installation instructions</li>
+        <li>Add some wordlists for api for example</li>
     </ol>
 </details>
