@@ -24,6 +24,10 @@
         <li>Bug bounty programs that require deep automation with minimal detection and noise.</li>
     </ul>
 
+### Example Output
+Here is an example of the `--help` command output:
+
+![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/sara_help_flag.jpg)
 
 <details><summary><h2><ins>Detailed Description</ins></h2></summary>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
