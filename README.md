@@ -2,9 +2,11 @@
 
 ## About SARA
 
-**SARA** *(Security Assistant, Researcher, Analyzer)* is an **asynchronous web crawler with enumeration capabilities**. The primary goal of the tool is to crawl target addresses, analyze source code and JavaScript files, and search for keywords, comments, and inline scripts. It also supports custom headers for flexibility.
+**SARA** *(Security Assistant, Researcher, Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
+<p>The primary goal of the tool is to crawl target addresses, analyze source code and JavaScript files, and search for keywords, comments, and inline scripts. It also supports custom headers for flexibility.</p>
+<p>Also there is an animation indicating that the program is running is included. The message <code>I’m running</code> will add a <code>.</code> every second to show activity.</p>
 
-<h3>Key Features:</h3>
+<h3><ins>Key Features:</ins></h3>
     <ul>
         <li><b>Crawling and Analysis:</b> SARA scans pages, extracting valuable information such as links, JavaScript files, and analyzing their content.</li>
         <li><b>Directory and Subdomain Enumeration:</b> Perfect for discovering niche endpoints like <code>/api</code> or <code>/graphql</code>, as well as enumerating subdomains.</li>
@@ -16,14 +18,14 @@
             </ul>
     </ul>
 
-<h3>Ideal for</h3>
+<h3><ins>Ideal for:</ins></h3>
     <ul>
         <li>Conducting penetration tests.</li>
         <li>Bug bounty programs that require deep automation with minimal detection and noise.</li>
     </ul>
 
 
-<details><summary><h2>Detailed description</h2></summary>
+<details><summary><h2><ins>Detailed description</ins></h2></summary>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
     <ol>
         <li><code>-t</code></li>
@@ -75,13 +77,13 @@
     </ol>
 </details>
 
-<details><summary><h2>Installation</h2></summary>
+<details><summary><h2><ins>Installation</ins></h2></summary>
     <ol>
         <li></li>
     </ol>
 </details>
 
-<details><summary><h2>Versions</h2></summary>
+<details><summary><h2><ins>Versions</ins></h2></summary>
     <ol>
         <li></li>
     </ol>
