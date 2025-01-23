@@ -465,6 +465,18 @@ Command Examples:
     if args.http and not args.enum_subdomains:
         parser.error("--http flag can only be used with --enum-s")
 
+    # Check -wha and -wjs only with -c mode
+    if args.without_headers_analysis and args.without_js and not args.crawl:
+        parser.error("-wha and -wjs flags can only be used with -c mode")
+
+    # Check -wjs only with -c mode
+    if args.without_js and not args.crawl:
+        parser.error("-wjs flag can only be used with -c mode")
+
+    # Check -wha only with -c mode
+    if args.without_headers_analysis and not args.crawl:
+        parser.error("-wha flag can only be used with -c mode")
+    
     # Process headers
     headers = process_headers(args.headers) if args.headers else {}
 
