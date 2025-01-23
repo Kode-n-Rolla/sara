@@ -138,10 +138,9 @@ Here is an example of the `--help` command output:
 <details><summary><h2>Todo</h2></summary>
     <ol>
         <li>Add images (with folder)</li>
-        <li>Add Versions and Release descrition</li>
+        <li>update Release</li>
         <li>Update default dirs</li>
         <li>Update default subdomains</li>
-        <li>Add cheker that checks -wjs, -wha with emum flags and --http only with --enum-s</li>
         <li>Add progress bar to enum modes</li>
         <li>Check installation instructions</li>
         <li>Add some wordlists for api for example</li>
