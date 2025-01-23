@@ -1,3 +1,6 @@
+# Current version of SARA
+__version__ = "1.0"
+
 import aiohttp
 import argparse
 import asyncio
@@ -421,7 +424,7 @@ if __name__ == "__main__":
     print("")
 
     parser = CustomArgumentParser(
-        description="Async Web Crawler with Enumeration",
+        description=f"Security Assistant Researcher Analyzer (v{__version__})\n",
         epilog="""
 Command Examples:
     1. Crawl and analyze a single URL:
@@ -465,17 +468,15 @@ Command Examples:
     if args.http and not args.enum_subdomains:
         parser.error("--http flag can only be used with --enum-s")
 
-    # Check -wha and -wjs only with -c mode
-    if args.without_headers_analysis and args.without_js and not args.crawl:
-        parser.error("-wha and -wjs flags can only be used with -c mode")
-
-    # Check -wjs only with -c mode
-    if args.without_js and not args.crawl:
-        parser.error("-wjs flag can only be used with -c mode")
-
-    # Check -wha only with -c mode
-    if args.without_headers_analysis and not args.crawl:
-        parser.error("-wha flag can only be used with -c mode")
+    # Check that -wha and -wjs flags are used only with -c mode
+    if not args.crawl:
+        if args.without_headers_analysis or args.without_js:
+            invalid_flags = []
+            if args.without_headers_analysis:
+                invalid_flags.append("-wha")
+            if args.without_js:
+                invalid_flags.append("-wjs")
+            parser.error(f"{' and '.join(invalid_flags)} flag(s) can only be used with -c mode")
     
     # Process headers
     headers = process_headers(args.headers) if args.headers else {}
