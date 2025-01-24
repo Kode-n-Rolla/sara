@@ -137,12 +137,12 @@ Here is an example of the `--help` command output:
 
 <details><summary><h2>Todo</h2></summary>
     <ol>
-        <li>Add images (with folder)</li>
-        <li>update Release</li>
+        <li>Create links to topics above all</li>
+        <li>Add logo</li>
+        <li>Update Release</li>
         <li>Update default dirs</li>
         <li>Update default subdomains</li>
-        <li>Add progress bar to enum modes</li>
         <li>Check installation instructions</li>
-        <li>Add some wordlists for api for example</li>
+        <li>Add some wordlists, for api for example</li>
     </ol>
 </details>
