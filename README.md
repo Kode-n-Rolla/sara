@@ -138,6 +138,7 @@ Here is an example of the `--help` command output:
 <details><summary><h2>Todo</h2></summary>
     <ol>
         <li>Create links to topics above all</li>
+        <li>Make sorted output in enum modes</li>
         <li>Add logo</li>
         <li>Update Release</li>
         <li>Update default dirs</li>
