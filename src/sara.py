@@ -382,22 +382,22 @@ async def main(args):
             try:
                 # Default directories
                 default_dirs = [
-                    "/admin",
-                    "/login",
-                    "/dashboard",
-                    "/config",
-                    "/api",
-                    "/robots.txt",
-                    "/sitemap.xml",
-                    "/env",
-                    "/private",
-                    "/uploads",
-                    "/tmp",
-                    "/health",
-                    "/metrics",
-                    "/status",
-                    "/graphql",
-                    "/graphiql"
+                    "admin",
+                    "login",
+                    "dashboard",
+                    "config",
+                    "api",
+                    "robots.txt",
+                    "sitemap.xml",
+                    "env",
+                    "private",
+                    "uploads",
+                    "tmp",
+                    "health",
+                    "metrics",
+                    "status",
+                    "graphql",
+                    "graphiql"
                 ]
                 dir_wordlist = load_wordlist(args.enum_directories, default_dirs)
             except ValueError as e:
