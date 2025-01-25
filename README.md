@@ -1,6 +1,6 @@
 <h1 align='center'>SARA v1.0</h1>
 
-<h2><a href='#about'>About</a> • <a href='#dd'>Detailed Description</a> • <a href='#ii'>Installation Instructions</a> • <a href='#versions'>Versions</a></h2>
+<h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Detailed Description</a> 🔬 • <a href='#ii'>Installation Instructions</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
 
 <h2 id='about'>About SARA</h2>
 
@@ -31,7 +31,7 @@ Here is an example of the `--help` command output:
 
 ![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/sara_help_flag.jpg)
 
-<details><summary><h2 id='dd'><ins>Detailed Description</ins></h2></summary>
+<h2 id='dd'><ins>Detailed Description</ins></h2>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
     <ol>
         <li><code>-t</code></li>
@@ -52,14 +52,20 @@ Here is an example of the `--help` command output:
                     <li>Requires a target with a full URL, including the protocol (e.g., <code>https://example.com</code>).</li>
                     <li>Accepts one target at a time.</li>
                     <li>Can use a default wordlist or a custom file for directories.</li>
+                    <li><details><summary><ins>Default wordlist</ins></summary>
+                        /admin, /login, /dashboard, /config, /api, /robots.txt, /sitemap.xml, /env, /private, /uploads, /tmp, /health, /metrics, /status, /graphql, /graphiql
+                    </details></li>
                 </ul>
         <li><code>--enum-s</code> (<b>Subdomain Enumeration</b>)</li>
             <p>Performs subdomain enumeration. Unlike <code>--enum-d</code>, this mode accepts only a domain as input (e.g., <code>example.com</code>).</p>
-            <ul>
-                <li>By default, it enumerates subdomains using the HTTPS protocol.</li>
-                <li>Accepts one target at a time.</li>
-                <li>Can use a default wordlist or a custom file for subdomains.</li>
-            </ul>
+                <ul>
+                    <li>By default, it enumerates subdomains using the HTTPS protocol.</li>
+                    <li>Accepts one target at a time.</li>
+                    <li>Can use a default wordlist or a custom file for subdomains.</li>
+                    <li><details><summary><ins>Default wordlist</ins></summary>
+                            dev, test, staging, qa, admin, dashboard, api, auth, mail, ftp, vpn, status
+                        </details></li>
+                </ul>
         <li><code>--http</code></li>
             <p>Works with <code>--enum-s</code> to enable subdomain enumeration over HTTP instead of HTTPS.</p>
         <li><code>-H</code></li>
@@ -81,9 +87,8 @@ Here is an example of the `--help` command output:
         <li><code>-h</code> (<b>Help</b>)</li>
             <p>Displays the manual, including command examples for easier usage.</p>
     </ol>
-</details>
 
-<details><summary><h2 id='ii'><ins>Installation Instructions</ins></h2></summary>
+<h2 id='ii'><ins>Installation Instructions</ins></h2>
     <p>Follow these steps to set up and use <b>SARA</b>:</p>
     <ol>
         <li><b>Clone the Repository</b></li>
@@ -103,9 +108,8 @@ Here is an example of the `--help` command output:
             <p>Now, you can run the tool from anywhere using:</p>
             <pre><code>sara --help</code></pre>
     </ol>
-</details>
 
-<details><summary><h2 id='verions'><ins>Versions</ins></h2></summary>
+<h2 id='verions'><ins>Versions</ins></h2>
 <table>
   <thead>
     <tr>
@@ -133,14 +137,11 @@ Here is an example of the `--help` command output:
     </tr>
   </tbody>
 </table>    
-</details>
 
 <h2 align='center'>From Pentester and Bug Hunter to Pentesters and Bug Hunters with love ❤️</h2>
 
 <details><summary><h2>Todo</h2></summary>
     <ol>
-        <li>Create links to topics above all</li>
-        <li>Make sorted output in enum modes</li>
         <li>Add logo</li>
         <li>Update Release</li>
         <li>Update default dirs</li>
