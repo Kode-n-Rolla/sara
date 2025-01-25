@@ -1,6 +1,8 @@
 <h1 align='center'>SARA v1.0</h1>
 
-## About SARA
+<h2><a href='#about'>About</a> • <a href='#dd'>Detailed Description</a> • <a href='#ii'>Installation Instructions</a> • <a href='#versions'>Versions</a></h2>
+
+<h2 id='about'>About SARA</h2>
 
 **SARA** *(Security Assistant Researcher Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
 <p>The primary goal of the tool is to crawl target addresses, analyze source code and JavaScript files, and search for keywords, comments, and inline scripts. It also supports custom headers for flexibility.</p>
@@ -29,7 +31,7 @@ Here is an example of the `--help` command output:
 
 ![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/sara_help_flag.jpg)
 
-<details><summary><h2><ins>Detailed Description</ins></h2></summary>
+<details><summary><h2 id='dd'><ins>Detailed Description</ins></h2></summary>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
     <ol>
         <li><code>-t</code></li>
@@ -81,7 +83,7 @@ Here is an example of the `--help` command output:
     </ol>
 </details>
 
-<details><summary><h2><ins>Installation Instructions</ins></h2></summary>
+<details><summary><h2 id='ii'><ins>Installation Instructions</ins></h2></summary>
     <p>Follow these steps to set up and use <b>SARA</b>:</p>
     <ol>
         <li><b>Clone the Repository</b></li>
@@ -103,7 +105,7 @@ Here is an example of the `--help` command output:
     </ol>
 </details>
 
-<details><summary><h2><ins>Versions</ins></h2></summary>
+<details><summary><h2 id='verions'><ins>Versions</ins></h2></summary>
 <table>
   <thead>
     <tr>
