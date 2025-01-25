@@ -17,7 +17,7 @@ async def run_with_dots(task_function, *args, **kwargs):
     stop_animation = False
 
     async def animate():
-        message = "I`m running"
+        message = "I`m researching"
         dots = ""
         while not stop_animation:
             sys.stdout.write(f"\r{message}{dots}")
@@ -186,7 +186,8 @@ async def enum_directories(session, base_url, headers, wordlist):
                 "error": str(e)
             })
         await asyncio.sleep(random.uniform(1, 5))  # Delay to mimic human behavior
-    return results
+
+    return sorted(results, key=lambda x: x.get("status_code", 999)) # Sort by status code
 
 # Function to perform subdomain enumeration
 async def enum_subdomains(session, base_domain, headers, wordlist, use_http=False):
@@ -207,14 +208,14 @@ async def enum_subdomains(session, base_domain, headers, wordlist, use_http=Fals
                 }
                 results.append(result)
         except Exception as e:
-            print(f"[ERROR] {url} - {e}")
+            #print(f"[ERROR] {url} - {e}")
             results.append({
                 "url": url,
                 "error": str(e)
             })
         await asyncio.sleep(random.uniform(1, 5))  # Delay to mimic human behavior
 
-    return results
+    return sorted(results, key=lambda x: x.get("status_code", 999)) # Sort by status code
 
 # Function to crawl and analyze URLs
 async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywords):
@@ -379,7 +380,26 @@ async def main(args):
                 print("[ERROR] --enum-d requires exactly one target URL.")
                 return
             try:
-                dir_wordlist = load_wordlist(args.enum_directories, ["api", "graphql", "login"])  # Default directories
+                # Default directories
+                default_dirs = [
+                    "/admin",
+                    "/login",
+                    "/dashboard",
+                    "/config",
+                    "/api",
+                    "/robots.txt",
+                    "/sitemap.xml",
+                    "/env",
+                    "/private",
+                    "/uploads",
+                    "/tmp",
+                    "/health",
+                    "/metrics",
+                    "/status",
+                    "/graphql",
+                    "/graphiql"
+                ]
+                dir_wordlist = load_wordlist(args.enum_directories, default_dirs)
             except ValueError as e:
                 print(e)
                 return
@@ -390,7 +410,22 @@ async def main(args):
                 print("[ERROR] --enum-s requires exactly one target domain.")
                 return
             try:
-                sub_wordlist = load_wordlist(args.enum_subdomains, ["admin", "stock", "dev"])  # Default subdomains
+                # Default subdomains
+                default_subs = [
+                    "dev",
+                    "test",
+                    "staging",
+                    "qa",
+                    "admin",
+                    "dashboard",
+                    "api",
+                    "auth",
+                    "mail",
+                    "ftp",
+                    "vpn",
+                    "status"
+                ]
+                sub_wordlist = load_wordlist(args.enum_subdomains, default_subs)
             except ValueError as e:
                 print(e)
                 return
@@ -418,10 +453,10 @@ if __name__ == "__main__":
     # Generate the ASCII art with the random font
     ascii_logo_random = pyfiglet.figlet_format("SARA", font=random_font)
     # Print the ASCII logo
-    print("")
+    print()
     #print(ascii_logo)
     print(ascii_logo_random)
-    print("")
+    print()
 
     parser = CustomArgumentParser(
         description=f"Security Assistant Researcher Analyzer (v{__version__})\n",
@@ -464,9 +499,9 @@ Command Examples:
     if not (args.crawl or args.enum_subdomains or args.enum_directories):
         parser.error("You must specify a mode: -c (crawl), --enum-s (enumerate subdomains), or --enum-d (enumerate directories).")
 
-    # Check -http only with --enum-s
+    # Check --http only with --enum-s
     if args.http and not args.enum_subdomains:
-        parser.error("--http flag can only be used with --enum-s")
+        parser.error("--http flag can only be used with --enum-s mode")
 
     # Check that -wha and -wjs flags are used only with -c mode
     if not args.crawl:
@@ -477,7 +512,7 @@ Command Examples:
             if args.without_js:
                 invalid_flags.append("-wjs")
             parser.error(f"{' and '.join(invalid_flags)} flag(s) can only be used with -c mode")
-    
+
     # Process headers
     headers = process_headers(args.headers) if args.headers else {}
 
