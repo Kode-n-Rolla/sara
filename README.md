@@ -1,6 +1,6 @@
 <h1 align='center'>SARA v1.0</h1>
 
-<h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Detailed Description</a> 🔬 • <a href='#ii'>Installation Instructions</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
+<h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Detailed Description</a> 🔬 • <a href='#ii'>Installation</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
 
 <img src='https://github.com/Kode-n-Rolla/sara/blob/main/images/sara.png' align='center'>
 
