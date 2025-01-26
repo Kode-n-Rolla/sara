@@ -144,11 +144,8 @@ Here is an example of the `--help` command output:
 
 <details><summary><h2>Todo</h2></summary>
     <ol>
-        <li>Add logo</li>
-        <li>Update Release</li>
-        <li>Update default dirs</li>
-        <li>Update default subdomains</li>
         <li>Check installation instructions</li>
-        <li>Add some wordlists, for api for example</li>
+        <li>Update Release</li>
+        <li>[Additional] Add some wordlists, for api for example</li>
     </ol>
 </details>
