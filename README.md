@@ -2,6 +2,8 @@
 
 <h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Detailed Description</a> 🔬 • <a href='#ii'>Installation Instructions</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
 
+<img src='https://github.com/Kode-n-Rolla/sara/blob/main/images/sara.png' align='center'>
+
 <h2 id='about'>About SARA</h2>
 
 **SARA** *(Security Assistant Researcher Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
