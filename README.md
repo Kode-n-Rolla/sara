@@ -141,10 +141,3 @@ Here is an example of the `--help` command output:
 </table>    
 
 <h2 align='center'>From Pentester and Bug Hunter to Pentesters and Bug Hunters with love ❤️</h2>
-
-<details><summary><h2>Todo</h2></summary>
-    <ol>
-        <li>Update Release</li>
-        <li>[Additional] Add some wordlists, for api for example</li>
-    </ol>
-</details>
