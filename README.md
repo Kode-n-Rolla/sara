@@ -8,7 +8,7 @@
 
 **SARA** *(Security Assistant Researcher Analyzer)* is an **asynchronous web crawler with enumeration capabilities**.
 <p>The primary goal of the tool is to crawl target addresses, analyze source code and JavaScript files, and search for keywords, comments, and inline scripts. It also supports custom headers for flexibility.</p>
-<p>Also there is an animation indicating that the program is running is included. The message <code>I’m running</code> will add a <code>.</code> every second to show activity.</p>
+<p>Also there is an animation indicating that the program is running is included. The message <code>I’m researching</code> will add a <code>.</code> every second to show activity.</p>
 
 <h3><ins>Key Features:</ins></h3>
     <ul>
@@ -144,7 +144,6 @@ Here is an example of the `--help` command output:
 
 <details><summary><h2>Todo</h2></summary>
     <ol>
-        <li>Check installation instructions</li>
         <li>Update Release</li>
         <li>[Additional] Add some wordlists, for api for example</li>
     </ol>
