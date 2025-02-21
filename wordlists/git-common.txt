@@ -1,0 +1,5 @@
+.git/HEAD
+.git/config
+.git/index
+.git/objects/
+.git/refs
