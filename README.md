@@ -38,7 +38,8 @@ Here is an example of the `--help` command output:
     <ol>
         <li><code>-t</code></li>
             <p>Accepts a single URL, a domain, or a file containing multiple targets. Works in conjunction with the three primary modes: <code>-c</code>, <code>--enum-s</code>, and <code>--enum-d</code>.</p>
-        <li><code>-c</code> (<b>Crawling Mode</b>). Accepts either a single URL or a file containing multiple URLs.</li>
+        <li><code>-c</code> (<b>Crawling Mode</b>).</li>
+            <p>Accepts either a single URL or a file containing multiple URLs.</p>
             <p>In crawling mode, SARA gathers key data about the target, including:</p>
                 <ul>
                     <li>HTTP response codes</li>
