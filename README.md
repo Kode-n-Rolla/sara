@@ -40,7 +40,7 @@ Here is an example of the `--help` command output:
             <p>Accepts a single URL, a domain, or a file containing multiple targets. Works in conjunction with the three primary modes: <code>-c</code>, <code>--enum-s</code>, and <code>--enum-d</code>.</p>
         <li><code>-c</code> (<b>Crawling Mode</b>).</li>
             <p>Accepts either a single URL or a file containing multiple URLs.</p>
-            <p>In crawling mode, SARA gathers key data about the target, including:</p>
+            <p>In crawling mode, SARA gathers key data about the target, including:
                 <ul>
                     <li>HTTP response codes</li>
                     <li>Links on the target web page</li>
@@ -48,9 +48,9 @@ Here is an example of the `--help` command output:
                     <li>JavaScript files and their analysis</li>
                     <li>Inline scripts</li>
                     <li>Keywords and comments</li>
-                </ul>
+                </ul></p>
          <li><code>--enum-d</code> (<b>Directory Enumeration</b>).</li>
-            <p>Performs directory enumeration. Since the tool intentionally uses slow request rates (1-5 seconds per request), it is recommended for highly specific endpoint enumeration, such as APIs.</p>
+            <p>Performs directory enumeration. Since the tool intentionally uses slow request rates (1-5 seconds per request), it is recommended for highly specific endpoint enumeration, such as APIs.
                 <ul>
                     <li>Requires a target with a full URL, including the protocol (e.g., <code>https://example.com</code>).</li>
                     <li>Accepts one target at a time.</li>
@@ -58,7 +58,7 @@ Here is an example of the `--help` command output:
                     <li><details><summary><ins>Default wordlist</ins></summary>
                         /admin, /login, /dashboard, /config, /api, /robots.txt, /sitemap.xml, /env, /private, /uploads, /tmp, /health, /metrics, /status, /graphql, /graphiql
                     </details></li>
-                </ul>
+                </ul></p>
         <li><code>--enum-s</code> (<b>Subdomain Enumeration</b>)</li>
             <p>Performs subdomain enumeration. Unlike <code>--enum-d</code>, this mode accepts only a domain as input (e.g., <code>example.com</code>).</p>
                 <ul>
@@ -72,16 +72,16 @@ Here is an example of the `--help` command output:
         <li><code>--http</code></li>
             <p>Works with <code>--enum-s</code> to enable subdomain enumeration over HTTP instead of HTTPS.</p>
         <li><code>-H</code></li>
-            <p>Adds custom HTTP headers. If provided, the custom User-Agent header will replace the default.</p>
-            <ul><li>Accepts both a string or a file containing headers.</li></ul>
+            <p>Adds custom HTTP headers. If provided, the custom User-Agent header will replace the default.
+            <ul><li>Accepts both a string or a file containing headers.</li></ul></p>
         <li><code>-o</code></li>
-            <p>Saves the output to a user-specified file.</p>
+            <p>Saves the output to a user-specified file.
             <ul>
                 <li>Output will also be printed to the terminal.</li>
                 <li>JSON is the recommended format for easier post-processing.</li>
-            </ul>
+            </ul></p>
         <li><code>-kw</code></li>
-            <p>Adds custom keywords for analysis during crawling.</p>
+            Adds custom keywords for analysis during crawling.
             <ul><li>Accepts either a string or a file containing keywords.</li></ul>
         <li><code>-wjs</code></li>
             <p>Disables JavaScript file analysis during crawling.</p>
