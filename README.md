@@ -33,7 +33,7 @@
 ### Example Output
 Here is a `--help` command output:
 
-![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/sara_help_flag.jpg)
+![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/help_output.png)
 
 <h2 id='dd' align="center">Detailed Description</h2>
     <b>SARA</b> provides extensive functionality through its flags and modes. Below is a detailed description of each:
