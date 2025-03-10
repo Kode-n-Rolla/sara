@@ -109,6 +109,11 @@ Here is a `--help` command output:
             <pre><code>pip install -r requirements.txt</code></pre>
             <p>Alternatively, if you encounter an error like <code>× This environment is externally managed</code>, use:</p>
             <pre><code>pip install -r requirements.txt --break-system-packages</code></pre>
+            <p><b><ins><i>With venv</i></ins></b></p>
+            <pre><code>python3 -m venv sara</code></pre>
+            <pre><code>source sara/bin/activate</code></pre>
+            <pre><code>pip install requirements.txt</code></pre>
+            <pre><code>deactivate</code></pre>
         <li><b>Run the Tool</b></li>
             <p>Execute the script with python3 to see available options:</p>
             <pre><code>python3 sara.py -h</code></pre>
