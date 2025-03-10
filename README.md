@@ -147,6 +147,7 @@ Here is a `--help` command output:
         <ul>
             <li>Colorized Terminal Output: Important elements are highlighted for better readability 🎨</li>
             <li>Headless Browser Bypass: Automatic WAF bypass for restricted pages 🛡️</li>
+            <li>Improved link collection during crawling</li>
         </ul>
       </td>
     </tr>
