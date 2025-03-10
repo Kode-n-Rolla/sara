@@ -12,9 +12,11 @@
 
 <h3><ins>Key Features:</ins></h3>
     <ul>
-        <li><b>Crawling and Analysis:</b> SARA scans pages, extracting valuable information such as links, JavaScript files, and analyzing their content.</li>
+        <li><b>Crawling and Analysis:</b> SARA scans pages, extracting valuable information such as links, JavaScript files, and analyzing their content. Can crawl multiple levels deep.</li>
         <li><b>Directory and Subdomain Enumeration:</b> Perfect for discovering niche endpoints like <code>/api</code> or <code>/graphql</code>, as well as enumerating subdomains.</li>
-        <li>Simulated User Behavior:</li>
+        <li><b>Support for GET and POST requests:</b> All modes (<code>-c</code>, <code>--enum-d</code>, <code>--enum-s</code>) support both `GET` and `POST` requests for more flexible crawling and enumeration.</li>
+        <li><b>Headless Browser WAF Bypass:</b>  If a target returns `403`, `406`, or `451`, SARA automatically retries using a headless browser to bypass WAF and JavaScript-based protections.</li>
+        <li><b>Simulated User Behavior:</b></li>
             <ul>
                 <li>The <code>User-Agent</code> header is randomly chosen from a preset list to mimic real browsers (e.g., Chrome, Firefox) and OS (e.g., Macintosh, Linux, Windows)</li>
                 <li>Users can specify their own <code>User-Agent</code>, overriding the default one.</li>
@@ -29,7 +31,7 @@
     </ul>
 
 ### Example Output
-Here is an example of the `--help` command output:
+Here is a `--help` command output:
 
 ![SARA Help Command Output](https://github.com/Kode-n-Rolla/sara/blob/main/images/sara_help_flag.jpg)
 
@@ -49,6 +51,9 @@ Here is an example of the `--help` command output:
                     <li>Inline scripts</li>
                     <li>Keywords and comments</li>
                 </ul></p>
+         <li><code>-d</code> (<b>Deep Crawling & Controlled Exploratio</b>)</li>
+            <p>With <code>-d</code> or <code>--depth</code>, SARA can crawl multiple levels deep.</p>
+            <p> Use <code>--depth 99</code> to enable interactive mode where you decide whether to proceed to the next depth level.</p>
          <li><code>--enum-d</code> (<b>Directory Enumeration</b>).</li>
             <p>Performs directory enumeration. Since the tool intentionally uses slow request rates (1-5 seconds per request), it is recommended for highly specific endpoint enumeration, such as APIs.
                 <ul>
@@ -71,6 +76,8 @@ Here is an example of the `--help` command output:
                 </ul>
         <li><code>--http</code></li>
             <p>Works with <code>--enum-s</code> to enable subdomain enumeration over HTTP instead of HTTPS.</p>
+        <li><code>-X</code></li>
+            <p>HTTP method to use (default: GET). Use <code>-X POST</code> for POST requests.</p>
         <li><code>-H</code></li>
             <p>Adds custom HTTP headers. If provided, the custom User-Agent header will replace the default.
             <ul><li>Accepts both a string or a file containing headers.</li></ul></p>
