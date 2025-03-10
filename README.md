@@ -135,6 +135,22 @@ Here is a `--help` command output:
   </thead>
   <tbody>
     <tr>
+      <td align='center'><b>1.1</b></td>
+      <td width=450>
+        <ul>
+          <li><code>-X</code>, <code>--method</code>: GET & POST Support. All modes now support both GET and POST requests</li>
+          <li><code>-d</code>, <code>--depth</code>:  Deep Crawling. <code>--depth 99</code> allows manual control over each depth level</li>
+          <li><code>--data</code>: Data for POST requests</li>
+        </ul>
+      </td>
+      <td align='center'>
+        <ul>
+            <li>Colorized Terminal Output: Important elements are highlighted for better readability 🎨</li>
+            <li>Headless Browser Bypass: Automatic WAF bypass for restricted pages 🛡️</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <td align='center'><b>1.0</b></td>
       <td width=450>
         <ul>
