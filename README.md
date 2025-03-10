@@ -51,7 +51,7 @@ Here is a `--help` command output:
                     <li>Inline scripts</li>
                     <li>Keywords and comments</li>
                 </ul></p>
-         <li><code>-d</code> (<b>Deep Crawling & Controlled Exploratio</b>)</li>
+         <li><code>-d</code> (<b>Deep Crawling & Controlled Exploration</b>)</li>
             <p>With <code>-d</code> or <code>--depth</code>, SARA can crawl multiple levels deep.</p>
             <p> Use <code>--depth 99</code> to enable interactive mode where you decide whether to proceed to the next depth level.</p>
          <li><code>--enum-d</code> (<b>Directory Enumeration</b>).</li>
