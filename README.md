@@ -1,4 +1,4 @@
-<h1 align='center'>SARA v1.0</h1>
+<h1 align='center'>SARA v1.1</h1>
 
 <h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Detailed Description</a> 🔬 • <a href='#ii'>Installation</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
 
