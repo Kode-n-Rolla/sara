@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Current version of SARA
 __version__ = "1.1"
 
