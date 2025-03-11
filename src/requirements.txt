@@ -1,2 +1,6 @@
 aiohttp>=3.10
+argparse
+beautifulsoup>=4.13
+colorama>=0.4
+playwright
 pyfiglet>=1.0
