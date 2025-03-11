@@ -1,18 +1,30 @@
-#!/usr/bin/env python3
-
 # Current version of SARA
-__version__ = "1.0"
+__version__ = "1.1"
 
 import aiohttp
 import argparse
 import asyncio
+from bs4 import BeautifulSoup
+import colorama
+from colorama import Fore, Style
 import json
 import os
+from playwright.async_api import async_playwright
 import pyfiglet
 import random
 import re
 import sys
 import time
+from urllib.parse import urljoin
+
+colorama.init(autoreset=True)
+
+"""
+   🔵 CYAN	   Fore.CYAN	Information messages
+   🟢 GREEN	   Fore.GREEN	Link, JS files
+   🟡 YELLOW   Fore.YELLOW	Warnings
+   🔴 RED	   Fore.RED	    Errors
+"""
 
 # Task progress indicator with dots animation
 async def run_with_dots(task_function, *args, **kwargs):
@@ -56,9 +68,16 @@ def extract_js_files(html):
     return js_files
 
 # Function to extract links from HTML content
-def extract_links(html):
-    links = re.findall(r'href=["\'](http[s]?://.*?)(?=["\'])', html)
-    return links
+def extract_links(html, base_url):
+    """Extract all links from the HTML and convert relative paths to absolute URLs."""
+    soup = BeautifulSoup(html, "html.parser")
+    links = []
+
+    for a_tag in soup.find_all("a", href=True):  # Looking for all <a> with href
+        full_url = urljoin(base_url, a_tag["href"])  # Make link absolute абсолютной
+        links.append(full_url)
+
+    return list(set(links))  # Delete duplicates
 
 # Function to extract comments from JavaScript code
 def extract_comments(js_code, max_length=50):
@@ -165,34 +184,35 @@ async def analyze_js_file(session, js_url, keywords=None, skip_comments=False):
         return {"url": js_url, "error": str(e)}
 
 # Function to perform directory enumeration
-async def enum_directories(session, base_url, headers, wordlist):
+async def enum_directories(session, base_url, headers, wordlist, method="GET", data=None):
     results = []
 
     # Randomize User-Agent if not provided
     if "User-Agent" not in headers:
         headers["User-Agent"] = random.choice(USER_AGENTS)
 
+    request_func = session.get if method.upper() == "GET" else session.post  # GET or POST
+
     for path in wordlist:
         url = f"{base_url.rstrip('/')}/{path.lstrip('/')}"
         try:
-            async with session.get(url, headers=headers, timeout=10) as response:
+            async with request_func(url, headers=headers, data=data, timeout=10) as response:
                 result = {
                     "url": url,
-                    "status_code": response.status
+                    "status_code": response.status,
+                    "method": method
                 }
                 results.append(result)
         except Exception as e:
-            print(f"[ERROR] {url} - {e}")
-            results.append({
-                "url": url,
-                "error": str(e)
-            })
+            print(f"{Fore.RED}[ERROR] {url} - {e} ({method}){Style.RESET_ALL}")
+            results.append({"url": url, "error": str(e), "method": method})
+
         await asyncio.sleep(random.uniform(1, 5))  # Delay to mimic human behavior
 
     return sorted(results, key=lambda x: x.get("status_code", 999)) # Sort by status code
 
 # Function to perform subdomain enumeration
-async def enum_subdomains(session, base_domain, headers, wordlist, use_http=False):
+async def enum_subdomains(session, base_domain, headers, wordlist, method="GET", data=None, use_http=False):
     results = []
     protocol = "http" if use_http else "https"
 
@@ -200,43 +220,78 @@ async def enum_subdomains(session, base_domain, headers, wordlist, use_http=Fals
     if "User-Agent" not in headers:
         headers["User-Agent"] = random.choice(USER_AGENTS)
 
+    request_func = session.get if method.upper() == "GET" else session.post  # GET or POST
+
     for subdomain in wordlist:
         url = f"{protocol}://{subdomain}.{base_domain}"
         try:
-            async with session.get(url, headers=headers, timeout=10) as response:
+            async with request_func(url, headers=headers, data=data, timeout=10) as response:
                 result = {
                     "url": url,
-                    "status_code": response.status
+                    "status_code": response.status,
+                     "method": method
                 }
                 results.append(result)
         except Exception as e:
-            #print(f"[ERROR] {url} - {e}")
-            results.append({
-                "url": url,
-                "error": str(e)
-            })
+            print(f"{Fore.RED}[ERROR] {url} - {e} ({method}){Style.RESET_ALL}")
+            results.append({"url": url, "error": str(e), "method": method})
+
         await asyncio.sleep(random.uniform(1, 5))  # Delay to mimic human behavior
 
     return sorted(results, key=lambda x: x.get("status_code", 999)) # Sort by status code
 
 # Function to crawl and analyze URLs
-async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywords):
+async def fetch_with_playwright(url, headers):
+    """
+    Fetch page content using Playwright headless browser.
+    Helps bypass WAF or JS-heavy pages.
+    """
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(user_agent=headers.get("User-Agent", random.choice(USER_AGENTS)))
+        page = await context.new_page()
+
+        try:
+            await page.goto(url, timeout=20000)  # 20 sec timeout
+            html = await page.content()  # Get rendered HTML
+            await browser.close()
+            return html
+        except Exception as e:
+            print(f"{Fore.RED}[ERROR] Playwright failed on {url}: {e}{Style.RESET_ALL}")
+            await browser.close()
+            return None
+
+async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywords, 
+                            method="GET", data=None, depth=1, current_depth=1, visited_links=None):
+    if visited_links is None:
+        visited_links = set()
+
     try:
+        if url in visited_links:
+            return  # Skip already visited links
+        visited_links.add(url)
+
         # Randomize User-Agent if not provided
         if "User-Agent" not in headers:
             headers["User-Agent"] = random.choice(USER_AGENTS)
 
-        async with session.get(url, headers=headers, timeout=10) as response:
-            if response.status == 200:
-                html = await response.text()
+        request_func = session.get if method.upper() == "GET" else session.post
 
-                # Count inline <script> tags (excluding those with src attribute)
+        async with request_func(url, headers=headers, data=data, timeout=10) as response:
+            html = await response.text() if response.status == 200 else None
+
+            # If 4XX status, try headless browser
+            if response.status in {403, 406, 451}: # May be changed
+                print(f"{Fore.YELLOW}[INFO] {url} blocked ({response.status}). Trying headless browser...{Style.RESET_ALL}")
+                html = await fetch_with_playwright(url, headers)
+
+            if html:
                 inline_script_pattern = r'<script(?![^>]*src=["\']).*?</script>'
                 script_tag_count = len(re.findall(inline_script_pattern, html, re.DOTALL | re.IGNORECASE))
 
                 js_files = [] if skip_js else extract_js_files(html)
                 js_results = []
-                links = extract_links(html)
+                links = extract_links(html, url)
                 header_issues = [] if skip_headers else analyze_headers(dict(response.headers))
 
                 if not skip_js:
@@ -245,9 +300,11 @@ async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywor
                             js_url = f"{url.rstrip('/')}/{js_url.lstrip('/')}"
                         js_results.append(await analyze_js_file(session, js_url, keywords))
 
-                return {
+                result = {
                     "url": url,
                     "status_code": response.status,
+                    "method": method,
+                    "depth": current_depth,
                     "links": links,
                     "headers": dict(response.headers),
                     "header_issues": header_issues,
@@ -255,13 +312,61 @@ async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywor
                     "js_analysis": js_results,
                     "inline_script_tag_count": script_tag_count
                 }
+
+                # Highlight successful WAF bypass
+                if response.status in {403, 406, 451}:  # May be changed
+                    print(f"{Fore.GREEN}[BYPASS] Successfully retrieved content via headless browser!{Style.RESET_ALL}")
+
+                # Print results
+                if not SAVE_TO_FILE:
+                    print()
+                    print(f"{Fore.GREEN}URL:{Style.RESET_ALL} {url} (Depth: {current_depth})")
+                    print(f"{Fore.CYAN}Status:{Style.RESET_ALL} {response.status} [{method}]")
+                    print(f"{Fore.YELLOW}Found JS files:{Style.RESET_ALL} {len(js_files)}")
+                    print(f"{Fore.MAGENTA}Links extracted:{Style.RESET_ALL} {len(links)}")
+
+                # Stop if max depth has been reached
+                if depth is not None and current_depth >= depth:
+                    print(f"{Fore.RED}Max depth reached: {depth}. Stopping further crawling.{Style.RESET_ALL}")
+                    return [result]
+
+                # Group all links for the next lvl
+                next_level_links = [link for link in links if link not in visited_links]
+
+                # Ask before diving
+                if next_level_links and depth == 99:
+                    print(f"{Fore.YELLOW}Found {len(next_level_links)} links at depth {current_depth}. Continue to depth {current_depth + 1}? (y/n){Style.RESET_ALL}")
+                    user_input = input("> ").strip().lower()
+                    if user_input not in ["y", "yes"]:
+                        return [result]
+
+                if next_level_links:
+                    print(f"{Fore.BLUE}Crawling next depth level: {current_depth + 1} ({len(next_level_links)} URLs){Style.RESET_ALL}")
+
+                    # Run tasks
+                    tasks = [
+                        crawl_and_analyze(
+                            session, link, headers, skip_js, skip_headers, keywords,
+                            method=method, data=data, depth=depth,
+                            current_depth=current_depth + 1, visited_links=visited_links
+                        ) for link in next_level_links
+                    ]
+
+                    deeper_results = await asyncio.gather(*tasks)
+                    return [result] + [res for sublist in deeper_results for res in (sublist if isinstance(sublist, list) else [sublist])]
+
+                return [result]
+
             else:
-                return {"url": url, "status_code": response.status, "error": "Failed to fetch"}
+                error_result = {"url": url, "status_code": response.status, "error": "Failed to fetch", "method": method}
+                if not SAVE_TO_FILE:
+                    print(f"{Fore.RED}Error fetching:{Style.RESET_ALL} {url} (Status: {response.status}, Method: {method})")
+                return [error_result]
 
     except Exception as e:
-        print(f"[ERROR] {url}: {e}")  # Log error
-        return {"url": url, "error": str(e)}
-
+        print(f"{Fore.RED}[ERROR] {url} ({method}): {e}{Style.RESET_ALL}")
+        return [{"url": url, "error": str(e), "method": method}]
+    
 # Function to process URLs from string or file
 def process_urls(target):
     if os.path.isfile(target):
@@ -323,6 +428,9 @@ async def main(args):
     # Process headers: support both strings and files
     headers = process_headers(args.headers) if args.headers else {}
 
+    global SAVE_TO_FILE
+    SAVE_TO_FILE = bool(args.output)
+
     # Process keywords: support both strings and files
     keywords = process_keywords(args.keywords) if args.keywords else []
 
@@ -374,7 +482,8 @@ async def main(args):
                 if "User-Agent" not in current_headers:
                     current_headers["User-Agent"] = random.choice(USER_AGENTS)
                 tasks.append(crawl_and_analyze(
-                    session, url, current_headers, args.without_js, args.without_headers_analysis, keywords
+                    session, url, current_headers, args.without_js, args.without_headers_analysis, 
+                    keywords, method=args.method, data=args.data, depth=args.depth
                 ))
 
         if args.enum_directories is not None:
@@ -382,7 +491,7 @@ async def main(args):
                 print("[ERROR] --enum-d requires exactly one target URL.")
                 return
             try:
-                # Default directories
+                # Default directories may be changed
                 default_dirs = [
                     "admin",
                     "login",
@@ -405,14 +514,14 @@ async def main(args):
             except ValueError as e:
                 print(e)
                 return
-            tasks.append(enum_directories(session, all_urls[0], headers, dir_wordlist))
+            tasks.append(enum_directories(session, all_urls[0], headers, dir_wordlist, args.method))
 
         if args.enum_subdomains is not None:
             if len(all_urls) != 1:
                 print("[ERROR] --enum-s requires exactly one target domain.")
                 return
             try:
-                # Default subdomains
+                # Default subdomains may be changed
                 default_subs = [
                     "dev",
                     "test",
@@ -431,8 +540,8 @@ async def main(args):
             except ValueError as e:
                 print(e)
                 return
-            tasks.append(enum_subdomains(session, all_urls[0], headers, sub_wordlist, use_http=args.http))
-
+            tasks.append(enum_subdomains(session, all_urls[0], headers, sub_wordlist, args.method, use_http=args.http))
+            
         # Run SARA
         if tasks:
             results = await run_with_dots(asyncio.gather, *tasks)
@@ -479,7 +588,15 @@ Command Examples:
     5. Crawl without analyzing headers and JavaScript files:
         sara -t http://www.example.com -c -wha -wjs
 
-    6. Save results to a file:
+    6. Crawl or enumerate using POST method:
+        sara -t http://www.example.com -c -x POST
+        python3 sara.py -t https://example.com --enum-d --method POST
+
+    7. Crawl with depth control:
+        sara -t http://www.example.com -c -d 3
+        sara -t http://www.example.com -c --depth 99  # Controlled depth mode (manual confirmation)
+
+    8. Save results to a file:
         sara -t https://example.com -c -o results.json
         """,
         formatter_class=argparse.RawTextHelpFormatter
@@ -494,6 +611,9 @@ Command Examples:
     parser.add_argument("-kw", "--keywords", nargs="+", help="Keywords to search for in JavaScript files. Can be a list of keywords or a file with one keyword per line")
     parser.add_argument("-wjs", "--without-js", action="store_true", help="Skip analysis of JavaScript files")
     parser.add_argument("-wha", "--without-headers-analysis", action="store_true", help="Skip analysis of headers")
+    parser.add_argument("-X", "--method", choices=["GET", "POST"], default="GET", help="HTTP method to use (default: GET). Use -X POST for POST requests.")
+    parser.add_argument("--data", type=str, help="Data for POST requests")
+    parser.add_argument("-d", "--depth", type=int, default=1, help="Set the depth level for crawling (default: 1).")
 
     args = parser.parse_args()
 
@@ -525,3 +645,4 @@ Command Examples:
     start_time = time.time()
     asyncio.run(main(args))
     print(f"Time taken: {time.time() - start_time:.2f} seconds")
+    
