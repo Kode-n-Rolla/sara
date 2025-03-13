@@ -2,3 +2,6 @@
 /api/graphql
 /v1/graphql
 /gql
+/api
+/graphql/api
+/graphql/graphql
