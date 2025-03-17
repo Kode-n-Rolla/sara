@@ -105,6 +105,8 @@ Here is a `--help` command output:
             <pre><code>git clone https://github.com/Kode-n-Rolla/sara.git</code></pre>
         <li><b>Navigate to the Source Directory</b></li>
             <pre><code>cd sara/src</code></pre>
+        <li><b>Make file executable</b></li>
+            <pre><code>chmod +x sara.py</code></pre>
         <li><b>Install Dependencies</b></li>
             <pre><code>pip install -r requirements.txt</code></pre>
             <p>Alternatively, if you encounter an error like <code>× This environment is externally managed</code>, use:</p>
