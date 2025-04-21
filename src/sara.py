@@ -264,7 +264,8 @@ async def fetch_with_playwright(url, headers):
             return None
 
 async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywords, 
-                            method="GET", data=None, depth=1, current_depth=1, visited_links=None):
+                            method="GET", data=None, depth=1, current_depth=1, visited_links=None,
+                            headless=False):
     if visited_links is None:
         visited_links = set()
 
@@ -277,93 +278,100 @@ async def crawl_and_analyze(session, url, headers, skip_js, skip_headers, keywor
         if "User-Agent" not in headers:
             headers["User-Agent"] = random.choice(USER_AGENTS)
 
-        request_func = session.get if method.upper() == "GET" else session.post
+        html = None
+        response = None
 
-        async with request_func(url, headers=headers, data=data, timeout=10) as response:
-            html = await response.text() if response.status == 200 else None
+        if headless:
+            html = await fetch_with_playwright(url, headers)
+        else:
+            request_func = session.get if method.upper() == "GET" else session.post
+            async with request_func(url, headers=headers, data=data, timeout=10) as resp:
+                response = resp
+                html = await resp.text() if resp.status == 200 else None
 
-            # If 4XX status, try headless browser
-            if response.status in {403, 406, 451}: # May be changed
-                print(f"{Fore.YELLOW}[INFO] {url} blocked ({response.status}). Trying headless browser...{Style.RESET_ALL}")
-                html = await fetch_with_playwright(url, headers)
+        if html:
+            inline_script_pattern = r'<script(?![^>]*src=["\']).*?</script>'
+            script_tag_count = len(re.findall(inline_script_pattern, html, re.DOTALL | re.IGNORECASE))
 
-            if html:
-                inline_script_pattern = r'<script(?![^>]*src=["\']).*?</script>'
-                script_tag_count = len(re.findall(inline_script_pattern, html, re.DOTALL | re.IGNORECASE))
+            js_files = [] if skip_js else extract_js_files(html)
+            js_results = []
+            links = extract_links(html, url)
+            header_issues = [] if skip_headers else analyze_headers(dict(response.headers) if response else {})
 
-                js_files = [] if skip_js else extract_js_files(html)
-                js_results = []
-                links = extract_links(html, url)
-                header_issues = [] if skip_headers else analyze_headers(dict(response.headers))
+            if not skip_js:
+                for js_url in js_files:
+                    if not js_url.startswith("http"):
+                        js_url = f"{url.rstrip('/')}/{js_url.lstrip('/')}"
+                    js_results.append(await analyze_js_file(session, js_url, keywords))
 
-                if not skip_js:
-                    for js_url in js_files:
-                        if not js_url.startswith("http"):
-                            js_url = f"{url.rstrip('/')}/{js_url.lstrip('/')}"
-                        js_results.append(await analyze_js_file(session, js_url, keywords))
+            result = {
+                "url": url,
+                "status_code": response.status if response else "N/A",
+                "method": method,
+                "depth": current_depth,
+                "links": links,
+                "headers": dict(response.headers) if response else {},
+                "header_issues": header_issues,
+                "js_files": js_files,
+                "js_analysis": js_results,
+                "inline_script_tag_count": script_tag_count
+            }
 
-                result = {
-                    "url": url,
-                    "status_code": response.status,
-                    "method": method,
-                    "depth": current_depth,
-                    "links": links,
-                    "headers": dict(response.headers),
-                    "header_issues": header_issues,
-                    "js_files": js_files,
-                    "js_analysis": js_results,
-                    "inline_script_tag_count": script_tag_count
-                }
+            # Headless indicator
+            if headless:
+                print(f"{Fore.GREEN}[HEADLESS] Fetched content via headless browser: {url}{Style.RESET_ALL}")
 
-                # Highlight successful WAF bypass
-                if response.status in {403, 406, 451}:  # May be changed
-                    print(f"{Fore.GREEN}[BYPASS] Successfully retrieved content via headless browser!{Style.RESET_ALL}")
+            # Print results
+            if not SAVE_TO_FILE:
+                print()
+                print(f"{Fore.GREEN}URL:{Style.RESET_ALL} {url} (Depth: {current_depth})")
+                print(f"{Fore.CYAN}Status:{Style.RESET_ALL} {result['status_code']} [{method}]")
+                print(f"{Fore.YELLOW}Found JS files:{Style.RESET_ALL} {len(js_files)}")
+                print(f"{Fore.MAGENTA}Links extracted:{Style.RESET_ALL} {len(links)}")
 
-                # Print results
-                if not SAVE_TO_FILE:
-                    print()
-                    print(f"{Fore.GREEN}URL:{Style.RESET_ALL} {url} (Depth: {current_depth})")
-                    print(f"{Fore.CYAN}Status:{Style.RESET_ALL} {response.status} [{method}]")
-                    print(f"{Fore.YELLOW}Found JS files:{Style.RESET_ALL} {len(js_files)}")
-                    print(f"{Fore.MAGENTA}Links extracted:{Style.RESET_ALL} {len(links)}")
-
-                # Stop if max depth has been reached
-                if depth is not None and current_depth >= depth:
-                    print(f"{Fore.RED}Max depth reached: {depth}. Stopping further crawling.{Style.RESET_ALL}")
-                    return [result]
-
-                # Group all links for the next lvl
-                next_level_links = [link for link in links if link not in visited_links]
-
-                # Ask before diving
-                if next_level_links and depth == 99:
-                    print(f"{Fore.YELLOW}Found {len(next_level_links)} links at depth {current_depth}. Continue to depth {current_depth + 1}? (y/n){Style.RESET_ALL}")
-                    user_input = input("> ").strip().lower()
-                    if user_input not in ["y", "yes"]:
-                        return [result]
-
-                if next_level_links:
-                    print(f"{Fore.BLUE}Crawling next depth level: {current_depth + 1} ({len(next_level_links)} URLs){Style.RESET_ALL}")
-
-                    # Run tasks
-                    tasks = [
-                        crawl_and_analyze(
-                            session, link, headers, skip_js, skip_headers, keywords,
-                            method=method, data=data, depth=depth,
-                            current_depth=current_depth + 1, visited_links=visited_links
-                        ) for link in next_level_links
-                    ]
-
-                    deeper_results = await asyncio.gather(*tasks)
-                    return [result] + [res for sublist in deeper_results for res in (sublist if isinstance(sublist, list) else [sublist])]
-
+            # Stop if max depth has been reached
+            if depth is not None and current_depth >= depth:
+                print(f"{Fore.RED}Max depth reached: {depth}. Stopping further crawling.{Style.RESET_ALL}")
                 return [result]
 
-            else:
-                error_result = {"url": url, "status_code": response.status, "error": "Failed to fetch", "method": method}
-                if not SAVE_TO_FILE:
-                    print(f"{Fore.RED}Error fetching:{Style.RESET_ALL} {url} (Status: {response.status}, Method: {method})")
-                return [error_result]
+            # Group all links for the next lvl
+            next_level_links = [link for link in links if link not in visited_links]
+
+            # Ask before diving
+            if next_level_links and depth == 99:
+                print(f"{Fore.YELLOW}Found {len(next_level_links)} links at depth {current_depth}. Continue to depth {current_depth + 1}? (y/n){Style.RESET_ALL}")
+                user_input = input("> ").strip().lower()
+                if user_input not in ["y", "yes"]:
+                    return [result]
+
+            if next_level_links:
+                print(f"{Fore.BLUE}Crawling next depth level: {current_depth + 1} ({len(next_level_links)} URLs){Style.RESET_ALL}")
+
+                # Run tasks
+                tasks = [
+                    crawl_and_analyze(
+                        session, link, headers, skip_js, skip_headers, keywords,
+                        method=method, data=data, depth=depth,
+                        current_depth=current_depth + 1, visited_links=visited_links,
+                        headless=headless
+                    ) for link in next_level_links
+                ]
+
+                deeper_results = await asyncio.gather(*tasks)
+                return [result] + [res for sublist in deeper_results for res in (sublist if isinstance(sublist, list) else [sublist])]
+
+            return [result]
+
+        else:
+            error_result = {
+                "url": url,
+                "status_code": response.status if response else "N/A",
+                "error": "Failed to fetch",
+                "method": method
+            }
+            if not SAVE_TO_FILE:
+                print(f"{Fore.RED}Error fetching:{Style.RESET_ALL} {url} (Status: {error_result['status_code']}, Method: {method})")
+            return [error_result]
 
     except Exception as e:
         print(f"{Fore.RED}[ERROR] {url} ({method}): {e}{Style.RESET_ALL}")
@@ -485,7 +493,7 @@ async def main(args):
                     current_headers["User-Agent"] = random.choice(USER_AGENTS)
                 tasks.append(crawl_and_analyze(
                     session, url, current_headers, args.without_js, args.without_headers_analysis, 
-                    keywords, method=args.method, data=args.data, depth=args.depth
+                    keywords, method=args.method, data=args.data, depth=args.depth, headless=args.headless
                 ))
 
         if args.enum_directories is not None:
@@ -598,7 +606,10 @@ Command Examples:
         sara -t http://www.example.com -c -d 3
         sara -t http://www.example.com -c --depth 99  # Controlled depth mode (manual confirmation)
 
-    8. Save results to a file:
+    8. Crawl with headless browser to avoid WAF:
+        sara -t http://www.example.com -c -hl    
+
+    9. Save results to a file:
         sara -t https://example.com -c -o results.json
         """,
         formatter_class=argparse.RawTextHelpFormatter
@@ -616,6 +627,7 @@ Command Examples:
     parser.add_argument("-X", "--method", choices=["GET", "POST"], default="GET", help="HTTP method to use (default: GET). Use -X POST for POST requests.")
     parser.add_argument("--data", type=str, help="Data for POST requests")
     parser.add_argument("-d", "--depth", type=int, default=1, help="Set the depth level for crawling (default: 1).")
+    parser.add_argument('-hl', '--headless', action='store_true', help='Enable headless browser for crawling')
 
     args = parser.parse_args()
 
