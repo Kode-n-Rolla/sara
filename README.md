@@ -15,7 +15,7 @@
         <li><b>Crawling and Analysis:</b> SARA scans pages, extracting valuable information such as links, JavaScript files, and analyzing their content. Can crawl multiple levels deep.</li>
         <li><b>Directory and Subdomain Enumeration:</b> Perfect for discovering niche endpoints like <code>/api</code> or <code>/graphql</code>, as well as enumerating subdomains.</li>
         <li><b>Support for GET and POST requests:</b> All modes (<code>-c</code>, <code>--enum-d</code>, <code>--enum-s</code>) support both `GET` and `POST` requests for more flexible crawling and enumeration.</li>
-        <li><b>Headless Browser WAF Bypass:</b>  If a target returns `403`, `406`, or `451`, SARA automatically retries using a headless browser to bypass WAF and JavaScript-based protections.</li>
+        <li><b>Headless Browser To Bypass WAF (<code>-hl</code>).</b></li>
         <li><b>Simulated User Behavior:</b></li>
             <ul>
                 <li>The <code>User-Agent</code> header is randomly chosen from a preset list to mimic real browsers (e.g., Chrome, Firefox) and OS (e.g., Macintosh, Linux, Windows)</li>
@@ -54,6 +54,9 @@ Here is a `--help` command output:
          <li><code>-d</code> (<b>Deep Crawling & Controlled Exploration</b>)</li>
             <p>With <code>-d</code> or <code>--depth</code>, SARA can crawl multiple levels deep.</p>
             <p> Use <code>--depth 99</code> to enable interactive mode where you decide whether to proceed to the next depth level.</p>
+         <li><code>-hl</code> (<b>Headless-browser</b>)</li>
+            <p>This flag enables crawling with a headless browser (via Playwright), which helps bypass WAF protections, JavaScript-rendered pages, and cloaked content.</p>
+            <p>Useful for targets that return misleading or blocked responses to regular HTTP requests.</p>
          <li><code>--enum-d</code> (<b>Directory Enumeration</b>).</li>
             <p>Performs directory enumeration. Since the tool intentionally uses slow request rates (1-5 seconds per request), it is recommended for highly specific endpoint enumeration, such as APIs.
                 <ul>
@@ -143,12 +146,12 @@ Here is a `--help` command output:
           <li><code>-X</code>, <code>--method</code>: GET & POST Support. All modes now support both GET and POST requests</li>
           <li><code>-d</code>, <code>--depth</code>:  Deep Crawling. <code>--depth 99</code> allows manual control over each depth level</li>
           <li><code>--data</code>: Data for POST requests</li>
+          <li><code>--hl</code>: Headless browser mode</li>
         </ul>
       </td>
       <td align='center'>
         <ul>
             <li>Colorized Terminal Output: Important elements are highlighted for better readability</li>
-            <li>Headless Browser Bypass: Automatic WAF bypass for restricted pages</li>
             <li>Improved link collection during crawling</li>
         </ul>
       </td>
