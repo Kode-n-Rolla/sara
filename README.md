@@ -146,7 +146,7 @@ Here is a `--help` command output:
           <li><code>-X</code>, <code>--method</code>: GET & POST Support. All modes now support both GET and POST requests</li>
           <li><code>-d</code>, <code>--depth</code>:  Deep Crawling. <code>--depth 99</code> allows manual control over each depth level</li>
           <li><code>--data</code>: Data for POST requests</li>
-          <li><code>--hl</code>: Headless browser mode</li>
+          <li><code>-hl</code>: Headless browser mode</li>
         </ul>
       </td>
       <td align='center'>
