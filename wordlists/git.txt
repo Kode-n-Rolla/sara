@@ -3,4 +3,4 @@
 .git/config
 .git/index
 .git/objects/
-.git/refs
+.git/refs/
