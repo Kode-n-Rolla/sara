@@ -1,5 +1,15 @@
 <h1 align='center'>SARA v1.1</h1>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-blue">
+  <img src="https://img.shields.io/badge/Interface-CLI-black">
+  <img src="https://img.shields.io/badge/Focus-Security-red">
+  <img src="https://img.shields.io/badge/Type-Automation-orange">
+  <img src="https://img.shields.io/badge/Domain-Pentesting-critical">
+  <img src="https://img.shields.io/badge/Status-Active-success">
+  <img src="https://img.shields.io/badge/License-MIT-green">
+</p>
+
 <h2 align='center'><a href='#about'>About</a> ℹ️ • <a href='#dd'>Description</a> 🔬 • <a href='#ii'>Installation</a> 🛠️ • <a href='#versions'>Versions</a> 📦</h2>
 
 <img src='https://github.com/Kode-n-Rolla/sara/blob/main/images/sara.png' align='center'>
