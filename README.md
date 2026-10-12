@@ -6,7 +6,6 @@
   <img src="https://img.shields.io/badge/Focus-Security-red">
   <img src="https://img.shields.io/badge/Type-Automation-orange">
   <img src="https://img.shields.io/badge/Domain-Pentesting-critical">
-  <img src="https://img.shields.io/badge/Status-Active-success">
   <img src="https://img.shields.io/badge/License-MIT-green">
 </p>
 
